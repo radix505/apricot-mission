@@ -37,18 +37,22 @@ readonly class MovieRecommendService
 
     public function recommendByLetterWAndEvenLength(): array
     {
-        return array_values(array_filter(
-            $this->movies,
+        return $this->filterMoviesArray(
             fn(string $title) => str_starts_with($title, 'W') &&
                 strlen($title) % 2 === 0
-        ));
+        );
     }
 
     public function recommendMultiWordTitles(): array
     {
+        return $this->filterMoviesArray(fn(string $title) => str_word_count($title) > 1);
+    }
+
+    private function filterMoviesArray(callable $filter): array
+    {
         return array_values(array_filter(
             $this->movies,
-            fn(string $title) => str_word_count($title) > 1
+            $filter
         ));
     }
 }
