@@ -27,16 +27,28 @@ readonly class MovieRecommendService
 
     public function recommend3RandomMovies(): array
     {
+        if (count($this->movies) <= 3) {
+            return $this->movies;
+        }
 
+        $keys = array_rand($this->movies, 3);
+        return array_map(fn($key) => $this->movies[$key], (array)$keys);
     }
 
     public function recommendByLetterWAndEvenLength(): array
     {
-
+        return array_values(array_filter(
+            $this->movies,
+            fn(string $title) => str_starts_with($title, 'W') &&
+                strlen($title) % 2 === 0
+        ));
     }
 
     public function recommendMultiWordTitles(): array
     {
-
+        return array_values(array_filter(
+            $this->movies,
+            fn(string $title) => str_word_count($title) > 1
+        ));
     }
 }
