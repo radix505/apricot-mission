@@ -14,6 +14,7 @@ final class MovieRecommendServiceTest extends TestCase
     protected function setUp(): void
     {
         $this->movies = require self::MOVIES_FILE_PATH;
+        $this->service = MovieRecommendService::fromFile(self::MOVIES_FILE_PATH);
     }
 
     public function testRecommend3RandomMovies()
@@ -43,5 +44,19 @@ final class MovieRecommendServiceTest extends TestCase
         foreach ($results as $title) {
             $this->assertGreaterThan(1, str_word_count($title));
         }
+    }
+
+    public function testFileFromMissingFile(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        MovieRecommendService::fromFile("non_existing_file.php");
+    }
+
+    public function testFileFromWrongFormat(): void
+    {
+        $invalidFile = __DIR__ . '/../Stub/invalid_movies.php';
+
+        $this->expectException(\RuntimeException::class);
+        MovieRecommendService::fromFile($invalidFile);
     }
 }
