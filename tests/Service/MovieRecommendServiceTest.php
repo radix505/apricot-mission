@@ -21,7 +21,12 @@ final class MovieRecommendServiceTest extends TestCase
     {
         $results = $this->service->recommend3RandomMovies();
 
-        $this->assertCount(3, $results);
+        if(count($this->movies) >= 3) {
+            $this->assertCount(3, $results);
+        } else {
+            $this->assertCount(count($this->movies), $results);
+        }
+
         foreach ($results as $title) {
             $this->assertContains($title, $this->movies);
         }
